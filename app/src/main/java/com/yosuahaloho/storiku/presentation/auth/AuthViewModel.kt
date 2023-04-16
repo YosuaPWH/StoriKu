@@ -12,7 +12,5 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val repo: AuthRepository) : ViewModel() {
 
-    suspend fun login() {
-        repo.login()
-    }
+
 }

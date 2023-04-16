@@ -17,10 +17,10 @@
             android:name=".presentation.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.auth.LoginActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
