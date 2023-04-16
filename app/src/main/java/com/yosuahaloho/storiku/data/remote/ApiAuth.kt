@@ -1,27 +1,27 @@
 package com.yosuahaloho.storiku.data.remote
 
-import com.yosuahaloho.storiku.data.model.RequestLogin
+import com.yosuahaloho.storiku.domain.model.LoginRequest
+import com.yosuahaloho.storiku.domain.model.RegisterRequest
 import com.yosuahaloho.storiku.data.remote.response.RegisterResponse
 import com.yosuahaloho.storiku.data.remote.response.login.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 /**
- * Created by Yosua on 16/04/2023
+ * Created by Yosua on 17/04/2023
  */
-interface ApiService {
+interface ApiAuth {
 
     @POST("register")
-    fun register(
-        @Field("name") name: String,
-        @Field("email") email: String,
-        @Field("password") password: String
+    suspend fun register(
+        @Body request: RegisterRequest
     ): Response<RegisterResponse>
 
     @POST("login")
-    fun login(
-        @Body requestLogin: RequestLogin
+    suspend fun login(
+        @Body request: LoginRequest
     ): Response<LoginResponse>
 }

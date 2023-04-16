@@ -1,8 +1,10 @@
 package com.yosuahaloho.storiku.presentation.auth
 
 import androidx.lifecycle.ViewModel
-import com.yosuahaloho.storiku.domain.AuthRepository
-import dagger.Lazy
+import androidx.lifecycle.asLiveData
+import com.yosuahaloho.storiku.domain.model.LoginRequest
+import com.yosuahaloho.storiku.domain.model.RegisterRequest
+import com.yosuahaloho.storiku.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val repo: AuthRepository) : ViewModel() {
 
-    suspend fun login() {
-        repo.login()
-    }
+    fun register(request: RegisterRequest) = repo.register(request).asLiveData()
+
+    fun login(request: LoginRequest) = repo.login(request).asLiveData()
 }
