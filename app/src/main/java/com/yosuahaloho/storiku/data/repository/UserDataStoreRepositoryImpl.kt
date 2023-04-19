@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yosuahaloho.storiku.domain.model.User
 import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,27 +19,33 @@ class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore:
     UserDataStoreRepository {
 
     private val name = stringPreferencesKey("name")
-    private val email = stringPreferencesKey("email")
     private val id = stringPreferencesKey("id")
+    private val token = stringPreferencesKey("token")
     private val isLogin = booleanPreferencesKey("islogin")
 
     override fun getDataUser() : Flow<User> {
         return userDataStore.data.map { pref ->
             User(
                 name = pref[name] ?: "",
-                email = pref[email] ?: "",
-                userId = pref[id] ?: ""
+                userId = pref[id] ?: "",
+                token = pref[token] ?: ""
             )
         }
     }
 
-    override suspend fun loginUser(user: User) {
+    override suspend fun setDataUser(user: User) {
         userDataStore.edit { pref ->
             pref[name] = user.name
-            pref[email] = user.email
             pref[id] = user.userId
+            pref[token] = user.token
             pref[isLogin] = true
         }
+    }
+
+    override suspend fun getToken(): String {
+        return userDataStore.data.map { pref ->
+            pref[token] ?: ""
+        }.first()
     }
 
     override suspend fun logout() {
@@ -46,7 +53,7 @@ class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore:
             pref[isLogin] = false
             pref[name] = ""
             pref[id] = ""
-            pref[email] = ""
+            pref[token] = ""
         }
     }
 }

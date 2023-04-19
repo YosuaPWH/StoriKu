@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.presentation.auth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -7,6 +8,7 @@ import androidx.activity.viewModels
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.ActivityLoginBinding
 import com.yosuahaloho.storiku.domain.model.LoginRequest
+import com.yosuahaloho.storiku.presentation.home.HomeActivity
 import com.yosuahaloho.storiku.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(request).observe(this@LoginActivity) {
                 when (it) {
                     is Result.Success -> {
-
+                        startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                     }
                     is Result.Loading -> {
 

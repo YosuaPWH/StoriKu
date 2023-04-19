@@ -8,8 +8,10 @@ import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.response.RegisterResponse
 import com.yosuahaloho.storiku.data.remote.response.login.LoginResponse
 import com.yosuahaloho.storiku.domain.repository.AuthRepository
+import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
 import com.yosuahaloho.storiku.utils.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -17,14 +19,16 @@ import javax.inject.Inject
 /**
  * Created by Yosua on 16/04/2023
  */
-class AuthRepositoryImpl @Inject constructor(private val api: ApiAuth) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(private val api: ApiAuth, private val userStore: UserDataStoreRepository) : AuthRepository {
 
-    override fun login(request: LoginRequest) = flow {
+    override fun login(request: LoginRequest): Flow<Result<LoginResponse?>> = flow {
         emit(Result.Loading)
         try {
             api.login(request).let {
                 if (it.isSuccessful) {
                     val body = it.body()
+                    val user = body?.loginResult!!
+                    userStore.setDataUser(user)
                     emit(Result.Success(body))
                 } else {
                     val errorMessage =
@@ -37,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(private val api: ApiAuth) : AuthRep
         }
     }.flowOn(Dispatchers.Default)
 
-    override fun register(request: RegisterRequest) = flow {
+    override fun register(request: RegisterRequest): Flow<Result<RegisterResponse?>> = flow {
         emit(Result.Loading)
         try {
             api.register(request).let {

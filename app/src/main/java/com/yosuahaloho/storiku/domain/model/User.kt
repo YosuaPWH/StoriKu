@@ -5,6 +5,6 @@ package com.yosuahaloho.storiku.domain.model
  */
 data class User(
     val name: String,
-    val email: String,
-    val userId: String
+    val userId: String,
+    val token: String
 )
