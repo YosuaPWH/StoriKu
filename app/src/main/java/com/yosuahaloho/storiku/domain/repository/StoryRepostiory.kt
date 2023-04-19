@@ -5,4 +5,5 @@ package com.yosuahaloho.storiku.domain.repository
  */
 interface StoryRepostiory {
 
+    fun getAllStories() :
 }
