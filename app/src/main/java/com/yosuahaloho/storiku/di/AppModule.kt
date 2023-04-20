@@ -43,7 +43,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuthInterceptor(dataStore: UserDataStoreRepository) = Interceptor { chain ->
-        var token = ""
+        var token: String
         runBlocking {
             withContext(Dispatchers.Default) {
                 token = dataStore.getToken()
