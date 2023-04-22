@@ -11,4 +11,6 @@ object Constants {
     const val STORY_DATABASE = "story_database"
     const val STORY_TABLE = "story_table"
     const val STORY_KEYS = "story_keys"
+
+    const val ITEM_PER_PAGE = 10
 }

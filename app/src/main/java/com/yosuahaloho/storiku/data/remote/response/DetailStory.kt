@@ -6,6 +6,6 @@ data class DetailStory (
     val description: String,
     val photoUrl: String,
     val createdAt: String,
-    val lat: Double,
-    val lon: Double
+    val lat: Double? = null,
+    val lon: Double? = null
 )

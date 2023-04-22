@@ -2,6 +2,7 @@ package com.yosuahaloho.storiku.di
 
 import android.util.Log
 import com.yosuahaloho.storiku.BuildConfig
+import com.yosuahaloho.storiku.data.local.db.StoryDatabase
 import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.repository.AuthRepositoryImpl
@@ -92,7 +93,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideStoryRepository(api: ApiStory) : StoryRepository {
-        return StoryRepositoryImpl(api)
+    fun provideStoryRepository(api: ApiStory, db: StoryDatabase) : StoryRepository {
+        return StoryRepositoryImpl(api, db)
     }
 }

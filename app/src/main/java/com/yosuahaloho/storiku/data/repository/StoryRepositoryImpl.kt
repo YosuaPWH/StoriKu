@@ -1,9 +1,18 @@
 package com.yosuahaloho.storiku.data.repository
 
+import android.util.Log
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.google.gson.Gson
+import com.yosuahaloho.storiku.data.local.db.StoryDatabase
+import com.yosuahaloho.storiku.data.local.entity.StoryData
+import com.yosuahaloho.storiku.data.paging.StoryRemoteMediator
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.remote.response.allstories.AllStoriesResponse
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
+import com.yosuahaloho.storiku.utils.Constants.ITEM_PER_PAGE
 import com.yosuahaloho.storiku.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,25 +21,21 @@ import javax.inject.Inject
 /**
  * Created by Yosua on 20/04/2023
  */
-class StoryRepositoryImpl @Inject constructor(private val api: ApiStory) : StoryRepository {
+class StoryRepositoryImpl @Inject constructor(
+    private val api: ApiStory,
+    private val db: StoryDatabase
+) : StoryRepository {
 
-    override fun getAllStories(): Flow<Result<AllStoriesResponse?>> = flow {
-        emit(Result.Loading)
-        try {
-            api.getAllStories().let {
-                if (it.isSuccessful) {
-                    val body = it.body()
-                    emit(Result.Success(body))
-                } else {
-                    val errorMessage = Gson().fromJson(
-                        it.errorBody()?.charStream(),
-                        AllStoriesResponse::class.java
-                    )
-                    emit(Result.Error(errorMessage.message))
-                }
-            }
-        } catch (e: Exception) {
-            emit(Result.Error(e.message.toString()))
-        }
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getAllStories(): Flow<PagingData<StoryData>> {
+        val pagingSource = { db.storyDataDao().getAllStory() }
+        return Pager(
+            config = PagingConfig(pageSize = ITEM_PER_PAGE),
+            remoteMediator = StoryRemoteMediator(
+                api = api,
+                db = db
+            ),
+            pagingSourceFactory = pagingSource
+        ).flow
     }
 }

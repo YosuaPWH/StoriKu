@@ -2,6 +2,8 @@ package com.yosuahaloho.storiku.data.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.yosuahaloho.storiku.data.local.dao.StoryDao
+import com.yosuahaloho.storiku.data.local.dao.StoryKeysDao
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.local.entity.StoryKeys
 
@@ -11,6 +13,6 @@ import com.yosuahaloho.storiku.data.local.entity.StoryKeys
 @Database(entities = [StoryData::class, StoryKeys::class], version = 1)
 abstract class StoryDatabase: RoomDatabase() {
 
-    abstract fun storyDataDao(): StoryData
-    abstract fun storyKeysDao(): StoryKeys
+    abstract fun storyDataDao(): StoryDao
+    abstract fun storyKeysDao(): StoryKeysDao
 }

@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.data.remote.response.allstories
 
+import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.remote.response.DetailStory
 
 /**

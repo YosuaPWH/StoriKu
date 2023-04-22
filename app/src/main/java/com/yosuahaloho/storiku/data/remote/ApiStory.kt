@@ -14,5 +14,5 @@ interface ApiStory {
     @GET("stories")
     suspend fun getAllStories(
         @Query("page") page: Int
-    ) : Response<AllStoriesResponse>
+    ) : AllStoriesResponse
 }
