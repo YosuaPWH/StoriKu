@@ -1,21 +1,26 @@
 package com.yosuahaloho.storiku.presentation.list_story
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.yosuahaloho.storiku.data.remote.response.DetailStory
+import com.yosuahaloho.storiku.R
+import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.databinding.ItemStoryBinding
-import com.yosuahaloho.storiku.domain.model.User
 
 /**
  * Created by Yosua on 20/04/2023
  */
-class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListStoryViewHolder>() {
+class ListStoryAdapter :
+    PagingDataAdapter<DetailStory, ListStoryAdapter.ListStoryViewHolder>(COMPARATOR) {
 
-    private var items = arrayListOf<DetailStory>()
+    private lateinit var onStoryClickCallback: OnStoryClickCallback
 
-    inner class ListStoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ListStoryViewHolder(private val binding: ItemStoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(story: DetailStory) {
             binding.apply {
                 Glide
@@ -23,14 +28,14 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListStoryViewHold
                     .load(story.photoUrl)
                     .into(ivStory)
 
-                tvAuthor.text = story.name
-                tvShortDesc.text = story.description
+                val nama = root.resources.getString(R.string.photo_by, story.name)
+                tvPhotoBy.text = Html.fromHtml(nama, Html.FROM_HTML_MODE_LEGACY)
+
+                root.setOnClickListener {
+                    onStoryClickCallback.onStoryClicked(story)
+                }
             }
         }
-    }
-
-    fun submitList(list: List<DetailStory>) {
-        items = list as ArrayList<DetailStory>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListStoryViewHolder {
@@ -39,8 +44,29 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListStoryViewHold
     }
 
     override fun onBindViewHolder(holder: ListStoryViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
+    interface OnStoryClickCallback {
+        fun onStoryClicked(story: DetailStory)
+    }
+
+    fun setOnStoryClickCallback(onStoryClickCallback: OnStoryClickCallback) {
+        this.onStoryClickCallback = onStoryClickCallback
+    }
+
+    companion object {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<DetailStory>() {
+            override fun areItemsTheSame(oldItem: DetailStory, newItem: DetailStory): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: DetailStory, newItem: DetailStory): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 }

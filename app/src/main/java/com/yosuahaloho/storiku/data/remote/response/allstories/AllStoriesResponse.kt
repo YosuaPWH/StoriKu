@@ -1,7 +1,6 @@
 package com.yosuahaloho.storiku.data.remote.response.allstories
 
-import com.yosuahaloho.storiku.data.local.entity.StoryData
-import com.yosuahaloho.storiku.data.remote.response.DetailStory
+import com.yosuahaloho.storiku.domain.model.DetailStory
 
 /**
  * Created by Yosua on 19/04/2023

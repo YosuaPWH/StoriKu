@@ -18,6 +18,7 @@
         tools:src="@drawable/image_sample" />
 
     <TextView
+        android:id="@+id/tv_photo_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Photo by Yosua Haloho"
@@ -25,8 +26,8 @@
         android:background="@color/black_50"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/iv_story" />
+
 
 <!--    <TextView-->
 <!--        android:id="@+id/tv_author"-->

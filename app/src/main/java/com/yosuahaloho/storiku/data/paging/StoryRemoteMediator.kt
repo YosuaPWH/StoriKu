@@ -1,6 +1,6 @@
 package com.yosuahaloho.storiku.data.paging
 
-import android.provider.MediaStore.Audio.Media
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -10,20 +10,14 @@ import com.yosuahaloho.storiku.data.local.db.StoryDatabase
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.local.entity.StoryKeys
 import com.yosuahaloho.storiku.data.remote.ApiStory
-import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import com.yosuahaloho.storiku.utils.DataMapper.detailStoryToEntity
-import com.yosuahaloho.storiku.utils.Result
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
  * Created by Yosua on 21/04/2023
  */
 @OptIn(ExperimentalPagingApi::class)
-class StoryRemoteMediator @Inject constructor(
+class StoryRemoteMediator(
     private val api: ApiStory,
     private val db: StoryDatabase
 ) : RemoteMediator<Int, StoryData>() {
@@ -42,12 +36,14 @@ class StoryRemoteMediator @Inject constructor(
                     val nextPage = remoteKeys?.nextPage ?: return MediatorResult.Success(
                         endOfPaginationReached = remoteKeys != null
                     )
+                    Log.d("NEXTPAGE", nextPage.toString())
                     nextPage
                 }
 
                 LoadType.REFRESH -> {
                     val remoteKeys = getStoryKeysCloseToCurrentPositionStory(state)
                     remoteKeys?.nextPage?.minus(1) ?: 1
+                    Log.d("RERESH", "REF")
                 }
 
                 LoadType.PREPEND -> {
@@ -59,6 +55,7 @@ class StoryRemoteMediator @Inject constructor(
                 }
             }
 
+            Log.d("CURRENTPAGE", currentPage.toString())
             val response = api.getAllStories(currentPage).listStory.map { it.detailStoryToEntity() }
             val endOfStoryReached = response.isEmpty()
 
@@ -81,9 +78,6 @@ class StoryRemoteMediator @Inject constructor(
                 storyDataDao.addStory(response)
             }
             MediatorResult.Success(endOfPaginationReached = endOfStoryReached)
-
-            MediatorResult.Error(IllegalArgumentException())
-
         } catch (e: Exception) {
             return MediatorResult.Error(e)
         }

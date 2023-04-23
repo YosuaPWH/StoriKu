@@ -1,6 +1,7 @@
 package com.yosuahaloho.storiku.data.local.entity
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.yosuahaloho.storiku.utils.Constants.STORY_TABLE
 
 /**
@@ -8,8 +9,10 @@ import com.yosuahaloho.storiku.utils.Constants.STORY_TABLE
  */
 @Entity(tableName = STORY_TABLE)
 data class StoryData(
+    @PrimaryKey(autoGenerate = false)
     val id: String,
     val name: String,
     val description: String,
-    val photoUrl: String
+    val photoUrl: String,
+    val createdAt: String
 )

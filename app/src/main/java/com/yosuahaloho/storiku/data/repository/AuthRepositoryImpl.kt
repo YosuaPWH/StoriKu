@@ -1,12 +1,11 @@
 package com.yosuahaloho.storiku.data.repository
 
-import android.util.Log
 import com.google.gson.Gson
-import com.yosuahaloho.storiku.domain.model.LoginRequest
-import com.yosuahaloho.storiku.domain.model.RegisterRequest
 import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.response.RegisterResponse
 import com.yosuahaloho.storiku.data.remote.response.login.LoginResponse
+import com.yosuahaloho.storiku.domain.model.LoginRequest
+import com.yosuahaloho.storiku.domain.model.RegisterRequest
 import com.yosuahaloho.storiku.domain.repository.AuthRepository
 import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
 import com.yosuahaloho.storiku.utils.Result
@@ -14,12 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import javax.inject.Inject
 
 /**
  * Created by Yosua on 16/04/2023
  */
-class AuthRepositoryImpl @Inject constructor(private val api: ApiAuth, private val userStore: UserDataStoreRepository) : AuthRepository {
+class AuthRepositoryImpl (private val api: ApiAuth, private val userStore: UserDataStoreRepository) : AuthRepository {
 
     override fun login(request: LoginRequest): Flow<Result<LoginResponse?>> = flow {
         emit(Result.Loading)

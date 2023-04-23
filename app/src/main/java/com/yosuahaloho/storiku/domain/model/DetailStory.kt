@@ -1,5 +1,9 @@
-package com.yosuahaloho.storiku.data.remote.response
+package com.yosuahaloho.storiku.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DetailStory (
     val id: String,
     val name: String,
@@ -8,4 +12,4 @@ data class DetailStory (
     val createdAt: String,
     val lat: Double? = null,
     val lon: Double? = null
-)
+) : Parcelable

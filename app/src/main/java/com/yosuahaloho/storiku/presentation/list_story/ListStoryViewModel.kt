@@ -9,7 +9,8 @@ import javax.inject.Inject
 /**
  * Created by Yosua on 20/04/2023
  */
-class ListStoryViewModel : ViewModel() {
+@HiltViewModel
+class ListStoryViewModel @Inject constructor(private val repo: StoryRepository) : ViewModel() {
 
-//    fun getAllStories() = repo.getAllStories().asLiveData()
+    fun getAllStories() = repo.getAllStories()
 }
