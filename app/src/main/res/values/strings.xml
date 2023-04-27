@@ -3,5 +3,6 @@
     <string name="app_name">StoriKu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_description">This is a description of the story. This is a description of the story. This is a description of the story. This is a description of the story. This is a description of the story.</string>
-    <string name="photo_by">Phosto by &lt;b>%s&lt;/b></string>
+    <string name="photo_by">Photo by &lt;b>%s&lt;/b></string>
+    <string name="btn_to_add_story_page">Button to go to the add story page</string>
 </resources>

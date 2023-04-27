@@ -26,6 +26,7 @@ class ListStoryAdapter :
                 Glide
                     .with(root)
                     .load(story.photoUrl)
+                    .placeholder(R.drawable.image_sample)
                     .into(ivStory)
 
                 val nama = root.resources.getString(R.string.photo_by, story.name)

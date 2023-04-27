@@ -50,10 +50,7 @@ class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore:
 
     override suspend fun logout() {
         userDataStore.edit { pref ->
-            pref[isLogin] = false
-            pref[name] = ""
-            pref[id] = ""
-            pref[token] = ""
+            pref.clear()
         }
     }
 }

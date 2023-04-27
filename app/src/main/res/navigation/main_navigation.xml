@@ -14,6 +14,9 @@
             android:id="@+id/action_listStoryFragment_to_detailStoryFragment"
             app:destination="@id/detailStoryFragment" >
         </action>
+        <action
+            android:id="@+id/action_listStoryFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailStoryFragment"
@@ -24,6 +27,19 @@
             android:name="story"
             app:argType="com.yosuahaloho.storiku.domain.model.DetailStory"/>
     </fragment>
-
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.yosuahaloho.storiku.presentation.camera.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_addStoryFragment"
+            app:destination="@id/addStoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addStoryFragment"
+        android:name="com.yosuahaloho.storiku.presentation.add_story.AddStoryFragment"
+        android:label="fragment_add_story"
+        tools:layout="@layout/fragment_add_story" />
 
 </navigation>
