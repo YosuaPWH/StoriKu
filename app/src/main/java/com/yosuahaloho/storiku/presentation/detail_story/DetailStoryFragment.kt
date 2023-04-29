@@ -1,12 +1,11 @@
 package com.yosuahaloho.storiku.presentation.detail_story
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.FragmentDetailStoryBinding
 
 class DetailStoryFragment : Fragment() {

@@ -9,6 +9,7 @@ import com.yosuahaloho.storiku.domain.model.RegisterRequest
 import com.yosuahaloho.storiku.domain.repository.AuthRepository
 import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
 import com.yosuahaloho.storiku.utils.Result
+import com.yosuahaloho.storiku.utils.getError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -29,9 +30,8 @@ class AuthRepositoryImpl (private val api: ApiAuth, private val userStore: UserD
                     userStore.setDataUser(user)
                     emit(Result.Success(body))
                 } else {
-                    val errorMessage =
-                        Gson().fromJson(it.errorBody()?.charStream(), LoginResponse::class.java)
-                    emit(Result.Error(errorMessage.message))
+                    val errorMessage = it.getError<LoginResponse>().message
+                    emit(Result.Error(errorMessage))
                 }
             }
         } catch (e: Exception) {
@@ -47,9 +47,8 @@ class AuthRepositoryImpl (private val api: ApiAuth, private val userStore: UserD
                     val body = it.body()
                     emit(Result.Success(body))
                 } else {
-                    val errorMessage =
-                        Gson().fromJson(it.errorBody()?.charStream(), RegisterResponse::class.java)
-                    emit(Result.Error(errorMessage.message))
+                    val errorMessage = it.getError<RegisterResponse>().message
+                    emit(Result.Error(errorMessage))
                 }
             }
         } catch (e: Exception) {

@@ -26,6 +26,4 @@
         android:layout_margin="20dp"
         android:contentDescription="@string/btn_to_add_story_page" />
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

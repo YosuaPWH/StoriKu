@@ -36,14 +36,14 @@ class StoryRemoteMediator(
                     val nextPage = remoteKeys?.nextPage ?: return MediatorResult.Success(
                         endOfPaginationReached = remoteKeys != null
                     )
-                    Log.d("NEXTPAGE", nextPage.toString())
                     nextPage
                 }
 
                 LoadType.REFRESH -> {
+//                    storyDataDao.deleteAllStory()
+//                    storyKeysDao.deleteAllStoryKeys()
                     val remoteKeys = getStoryKeysCloseToCurrentPositionStory(state)
                     remoteKeys?.nextPage?.minus(1) ?: 1
-                    Log.d("RERESH", "REF")
                 }
 
                 LoadType.PREPEND -> {
@@ -64,6 +64,7 @@ class StoryRemoteMediator(
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
+                    Log.d("JALAN GAK SIH ", "OYA")
                     storyDataDao.deleteAllStory()
                     storyKeysDao.deleteAllStoryKeys()
                 }

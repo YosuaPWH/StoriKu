@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val repo: AuthRepository) : ViewModel() {
 
-    fun register(request: RegisterRequest) = repo.register(request).asLiveData()
+    fun register(request: RegisterRequest) = repo.register(request)
 
     fun login(request: LoginRequest) = repo.login(request).asLiveData()
 }

@@ -4,12 +4,16 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -17,6 +21,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.yosuahaloho.storiku.databinding.FragmentCameraBinding
 import com.yosuahaloho.storiku.presentation.add_story.AddStoryFragment
 import com.yosuahaloho.storiku.utils.createFile
@@ -31,26 +36,13 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-    private lateinit var safeContext: Context
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        safeContext = context
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreate(savedInstanceState)
+        hideSystemUI()
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
-
-
-
         return binding.root
     }
 
@@ -110,19 +102,14 @@ class CameraFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val bundle = Bundle().apply {
-                        putString("picture", photoFile.absolutePath)
-                        putBoolean(
-                            "isBackCamera",
-                            cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
+                    val toAddStory =
+                        CameraFragmentDirections.actionCameraFragmentToAddStoryFragment(
+                            photoFile.absolutePath,
+                            cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA,
+                            true
                         )
-                    }
-
-//                    val intent = Intent()
-//                    intent.putExtra("picture", photoFile)
-//                    intent.putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-//                    activity?.setResult(AddStoryFragment.CAMERA_RESULT, intent)
-                    activity?.finish()
+                    Toast.makeText(requireActivity(), "SELECTED ${photoFile.absolutePath}", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(toAddStory)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -137,14 +124,30 @@ class CameraFragment : Fragment() {
     }
 
 
+    private fun hideSystemUI() {
+        val activityFrag = (requireActivity() as AppCompatActivity)
+        activityFrag.supportActionBar?.hide()
+
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activityFrag.window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            activityFrag.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         startCamera()
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
+        val activityFrag = (requireActivity() as AppCompatActivity)
+        activityFrag.supportActionBar?.show()
         _binding = null
     }
 }

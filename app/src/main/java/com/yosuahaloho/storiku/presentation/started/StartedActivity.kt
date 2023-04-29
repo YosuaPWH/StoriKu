@@ -1,10 +1,8 @@
 package com.yosuahaloho.storiku.presentation.started
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.fragment.NavHostFragment
-import com.yosuahaloho.storiku.R
+import androidx.appcompat.app.AppCompatActivity
 import com.yosuahaloho.storiku.databinding.ActivityStartedBinding
 import com.yosuahaloho.storiku.presentation.auth.LoginActivity
 import com.yosuahaloho.storiku.presentation.auth.RegisterActivity
@@ -26,4 +24,5 @@ class StartedActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
+
 }

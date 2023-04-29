@@ -10,6 +10,10 @@
         android:name="com.yosuahaloho.storiku.presentation.list_story.ListStoryFragment"
         android:label="fragment_list_story"
         tools:layout="@layout/fragment_list_story" >
+        <argument
+            android:name="isFromAddStory"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_listStoryFragment_to_detailStoryFragment"
             app:destination="@id/detailStoryFragment" >
@@ -17,6 +21,9 @@
         <action
             android:id="@+id/action_listStoryFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_listStoryFragment_to_addStoryFragment"
+            app:destination="@id/addStoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailStoryFragment"
@@ -40,6 +47,19 @@
         android:id="@+id/addStoryFragment"
         android:name="com.yosuahaloho.storiku.presentation.add_story.AddStoryFragment"
         android:label="fragment_add_story"
-        tools:layout="@layout/fragment_add_story" />
+        tools:layout="@layout/fragment_add_story" >
+        <argument
+            android:name="picture"
+            app:argType="string"/>
+        <argument
+            android:name="isBackCamera"
+            app:argType="boolean" />
+        <argument
+            android:name="isFromCamera"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_addStoryFragment_to_listStoryFragment"
+            app:destination="@id/listStoryFragment" />
+    </fragment>
 
 </navigation>

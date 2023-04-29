@@ -15,21 +15,24 @@ import javax.inject.Inject
 /**
  * Created by Yosua on 17/04/2023
  */
-class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore: DataStore<Preferences>) :
+class UserDataStoreRepositoryImpl (private val userDataStore: DataStore<Preferences>) :
     UserDataStoreRepository {
 
     private val name = stringPreferencesKey("name")
     private val id = stringPreferencesKey("id")
     private val token = stringPreferencesKey("token")
-    private val isLogin = booleanPreferencesKey("islogin")
 
-    override fun getDataUser() : Flow<User> {
+    override suspend fun getDataUser(): Flow<User?> {
         return userDataStore.data.map { pref ->
-            User(
-                name = pref[name] ?: "",
-                userId = pref[id] ?: "",
-                token = pref[token] ?: ""
-            )
+            val name = pref[name]
+            val id = pref[id]
+            val token = pref[token]
+
+            if (name.isNullOrEmpty() || id.isNullOrEmpty() || token.isNullOrEmpty()) {
+                null
+            } else {
+                User(name = name, userId = id, token = token)
+            }
         }
     }
 
@@ -38,13 +41,12 @@ class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore:
             pref[name] = user.name
             pref[id] = user.userId
             pref[token] = user.token
-            pref[isLogin] = true
         }
     }
 
     override suspend fun getToken(): String {
         return userDataStore.data.map { pref ->
-            pref[token] ?: ""
+            pref[token].orEmpty()
         }.first()
     }
 
@@ -53,4 +55,6 @@ class UserDataStoreRepositoryImpl @Inject constructor(private val userDataStore:
             pref.clear()
         }
     }
+
+
 }

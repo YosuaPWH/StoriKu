@@ -42,11 +42,10 @@ class RegisterActivity : AppCompatActivity() {
                     email = edRegisterEmail.text.toString(),
                     password = edRegisterPassword.text.toString()
                 )
-                viewModel.register(request).observe(this@RegisterActivity) {
-                    when (it) {
-                        is Result.Success -> {
-                            lifecycleScope.launch {
-//                                delay(3000)
+                lifecycleScope.launch {
+                    viewModel.register(request).collect {
+                        when (it) {
+                            is Result.Success -> {
                                 startActivity(
                                     Intent(
                                         this@RegisterActivity,
@@ -55,15 +54,14 @@ class RegisterActivity : AppCompatActivity() {
                                 )
                                 finish()
                             }
-                        }
 
-                        is Result.Loading -> {
+                            is Result.Loading -> {
 
-                        }
-
-                        is Result.Error -> {
-                            Toast.makeText(this@RegisterActivity, it.error, Toast.LENGTH_SHORT)
-                                .show()
+                            }
+                            is Result.Error -> {
+                                Toast.makeText(this@RegisterActivity, it.error, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     }
                 }

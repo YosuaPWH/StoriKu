@@ -2,20 +2,14 @@ package com.yosuahaloho.storiku.presentation.list_story
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +22,7 @@ import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.FragmentListStoryBinding
 import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
+import com.yosuahaloho.storiku.utils.uriToFile
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -39,7 +34,6 @@ class ListStoryFragment : Fragment() {
     private val viewModel: ListStoryViewModel by viewModels()
     private val listStoryAdapter by lazy { ListStoryAdapter() }
 
-    @SuppressLint("InflateParams")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +42,13 @@ class ListStoryFragment : Fragment() {
         _binding = FragmentListStoryBinding.inflate(inflater, container, false)
         binding.rvListStory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvListStory.adapter = listStoryAdapter
+        setupView()
+        setupButton()
+
+        return binding.root
+    }
+
+    private fun setupView() {
         lifecycleScope.launch {
             viewModel.getAllStories().collect {
                 val data = it.map { sd ->
@@ -64,33 +65,58 @@ class ListStoryFragment : Fragment() {
                 findNavController().navigate(toDetailStory)
             }
         })
+    }
 
+    @SuppressLint("InflateParams")
+    private fun setupButton() {
         binding.fabAddStory.setOnClickListener {
+            Log.d("YAHADISATA", "YAHAHAH")
             val bottomSheet = BottomSheetDialog(requireContext())
             val bottomSheetView = layoutInflater.inflate(R.layout.layout_bottom_camera, null)
 
-            bottomSheetView.findViewById<MaterialButton>(R.id.btn_camera).setOnClickListener {
-                bottomSheet.dismiss()
+            bottomSheet.setContentView(bottomSheetView)
+            bottomSheet.show()
 
+            bottomSheetView.findViewById<MaterialButton>(R.id.btn_camera).setOnClickListener {
+                Log.d("DIKLIK BERAPA", "INI BERAPA")
+                bottomSheet.dismiss()
                 requestPermissionCamera()
             }
 
             bottomSheetView.findViewById<MaterialButton>(R.id.btn_gallery).setOnClickListener {
                 bottomSheet.dismiss()
+                launchGallery()
             }
-
-            bottomSheet.setContentView(bottomSheetView)
-            bottomSheet.show()
         }
-
-        return binding.root
-
     }
+
+    private fun launchGallery() {
+        pickPhotoFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private val pickPhotoFromGallery =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Toast.makeText(requireActivity(), "SELECTED $uri", Toast.LENGTH_SHORT).show()
+                val file = uriToFile(uri, requireActivity())
+                val toAddStory =
+                    ListStoryFragmentDirections.actionListStoryFragmentToAddStoryFragment(
+                        file.absolutePath,
+                        false,
+                        false
+                    )
+                findNavController().navigate(toAddStory)
+            } else {
+                Toast.makeText(requireActivity(), "NOTHING LAST FOREVER", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private val requestPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
+//            val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+//            actionBar.hide()
             startCameraX()
         } else {
             Toast.makeText(requireContext(), "Tidak diijinkan", Toast.LENGTH_SHORT).show()

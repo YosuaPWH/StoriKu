@@ -7,6 +7,7 @@ import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.repository.AuthRepositoryImpl
 import com.yosuahaloho.storiku.data.repository.StoryRepositoryImpl
+import com.yosuahaloho.storiku.data.repository.UserDataStoreRepositoryImpl
 import com.yosuahaloho.storiku.domain.repository.AuthRepository
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
@@ -96,4 +97,5 @@ object AppModule {
     fun provideStoryRepository(api: ApiStory, db: StoryDatabase) : StoryRepository {
         return StoryRepositoryImpl(api, db)
     }
+
 }

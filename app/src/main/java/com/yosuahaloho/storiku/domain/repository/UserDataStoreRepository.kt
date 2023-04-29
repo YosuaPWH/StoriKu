@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDataStoreRepository {
 
     suspend fun setDataUser(user: User)
-    fun getDataUser() : Flow<User>
+    suspend fun getDataUser() : Flow<User?>
     suspend fun logout()
     suspend fun getToken() : String
 
