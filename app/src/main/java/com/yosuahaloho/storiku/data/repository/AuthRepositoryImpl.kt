@@ -55,4 +55,8 @@ class AuthRepositoryImpl (private val api: ApiAuth, private val userStore: UserD
             emit(Result.Error(e.message.toString()))
         }
     }.flowOn(Dispatchers.Default)
+
+    override suspend fun logout(): Boolean {
+        return userStore.logout()
+    }
 }

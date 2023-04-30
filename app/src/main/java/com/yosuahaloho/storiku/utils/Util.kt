@@ -2,8 +2,10 @@ package com.yosuahaloho.storiku.utils
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Environment
+import android.util.TypedValue
 import com.google.gson.Gson
 import retrofit2.Response
 import java.io.File
@@ -39,4 +41,12 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
 fun createCustomTempFile(context: Context): File {
     val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(timeStamp, ".jpg", storageDir)
+}
+
+fun Int.dpToPx(): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
 }

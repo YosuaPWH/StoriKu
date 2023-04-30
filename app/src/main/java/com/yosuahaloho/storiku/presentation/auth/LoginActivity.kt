@@ -23,6 +23,9 @@ class LoginActivity : AppCompatActivity() {
         loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
 
+        supportActionBar?.title = "Login"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setupView()
     }
 
@@ -52,5 +55,10 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

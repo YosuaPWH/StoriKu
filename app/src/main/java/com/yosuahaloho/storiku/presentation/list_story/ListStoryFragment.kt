@@ -2,16 +2,23 @@ package com.yosuahaloho.storiku.presentation.list_story
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.map
@@ -21,6 +28,8 @@ import com.google.android.material.button.MaterialButton
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.FragmentListStoryBinding
 import com.yosuahaloho.storiku.domain.model.DetailStory
+import com.yosuahaloho.storiku.presentation.auth.AuthViewModel
+import com.yosuahaloho.storiku.presentation.started.StartedActivity
 import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
 import com.yosuahaloho.storiku.utils.uriToFile
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +40,8 @@ class ListStoryFragment : Fragment() {
 
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ListStoryViewModel by viewModels()
+    private val listStoryViewModel: ListStoryViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     private val listStoryAdapter by lazy { ListStoryAdapter() }
 
     override fun onCreateView(
@@ -44,13 +54,46 @@ class ListStoryFragment : Fragment() {
         binding.rvListStory.adapter = listStoryAdapter
         setupView()
         setupButton()
+        setupMenu()
 
         return binding.root
     }
 
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.logout, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.btn_logout -> {
+                        logout()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun logout() {
+        lifecycleScope.launch {
+            val logout = authViewModel.logout()
+            if (logout) {
+                Toast.makeText(requireActivity(), "Berhasil Logout", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(requireActivity(), StartedActivity::class.java))
+                activity?.finish()
+            } else {
+                Toast.makeText(requireActivity(), "Gagal Logout, terdapat kesalahan", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun setupView() {
         lifecycleScope.launch {
-            viewModel.getAllStories().collect {
+            listStoryViewModel.getAllStories().collect {
                 val data = it.map { sd ->
                     sd.storyDataToModel()
                 }

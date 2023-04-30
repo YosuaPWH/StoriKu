@@ -16,6 +16,7 @@ class StartedActivity : AppCompatActivity() {
         binding = ActivityStartedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
         binding.btnGetstartedCreateAccount.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }

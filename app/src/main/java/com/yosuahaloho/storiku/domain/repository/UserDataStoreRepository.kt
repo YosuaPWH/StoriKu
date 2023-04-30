@@ -10,7 +10,7 @@ interface UserDataStoreRepository {
 
     suspend fun setDataUser(user: User)
     suspend fun getDataUser() : Flow<User?>
-    suspend fun logout()
+    suspend fun logout() : Boolean
     suspend fun getToken() : String
 
 }

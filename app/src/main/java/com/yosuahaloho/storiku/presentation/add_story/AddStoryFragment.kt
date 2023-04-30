@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -40,6 +41,9 @@ class AddStoryFragment : Fragment() {
         // Inflate the layout for this fragment
         super.onCreate(savedInstanceState)
         _binding = FragmentAddStoryBinding.inflate(inflater, container, false)
+
+        val activityFrag = (requireActivity() as AppCompatActivity)
+        activityFrag.supportActionBar?.title = "Add Story"
 
         val args = AddStoryFragmentArgs.fromBundle(requireArguments())
 

@@ -1,24 +1,16 @@
 package com.yosuahaloho.storiku.presentation.custom
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Canvas
-import android.graphics.Typeface
-import android.text.InputType
 import android.util.AttributeSet
-import android.util.TypedValue
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.textfield.TextInputLayout.EndIconMode
-import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.utils.dpToPx
 
 /**
- * Created by Yosua on 18/04/2023
+ * Created by Yosua on 29/04/2023
  */
-class EditTextPasswordCustomView : TextInputEditText {
+class EditTextEmailCustomView : TextInputEditText {
 
     constructor(context: Context) : super(context) {
         init()
@@ -35,17 +27,15 @@ class EditTextPasswordCustomView : TextInputEditText {
     private fun init() {
         setPadding(12.dpToPx(), 16.dpToPx(), 12.dpToPx(), 16.dpToPx())
 
-        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         doOnTextChanged { text, _, _, _ ->
             val parentLayout = parent.parent as TextInputLayout
-            if (text.toString().length < 8) {
-                parentLayout.error = "Input must be at least 8 characters"
-                parentLayout.errorIconDrawable = null
-            } else {
+            if (android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
                 parentLayout.isErrorEnabled = false
+            } else {
+                parentLayout.error = "Input must be valid email address"
             }
         }
-    }
 
+    }
 
 }
