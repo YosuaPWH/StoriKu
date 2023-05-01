@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -57,6 +58,7 @@ class AddStoryFragment : Fragment() {
         binding.btnSend.setOnClickListener {
             uploadStory()
         }
+
     }
 
     private fun getPicture(args: AddStoryFragmentArgs) {
@@ -101,7 +103,13 @@ class AddStoryFragment : Fragment() {
                         }
 
                         is Result.Error -> {
-                            Toast.makeText(requireActivity(), it.error, Toast.LENGTH_SHORT).show()
+                            val errorMessage = if (it.error == "\"description\" is not allowed to be empty") {
+                                "Silahkan isi deskripsi terlebih dahulu"
+                            } else {
+                                it.error
+                            }
+
+                            Toast.makeText(requireActivity(), errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

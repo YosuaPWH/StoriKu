@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.yosuahaloho.storiku.presentation.home.HomeActivity
 import com.yosuahaloho.storiku.presentation.started.StartedActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -24,6 +25,7 @@ class RoutingActivity : ComponentActivity() {
         val splash = installSplashScreen()
         splash.setKeepOnScreenCondition { true }
         lifecycleScope.launch {
+            delay(1000)
             viewModel.getUser().collect {
                 val intent = if (it != null) {
                     Intent(this@RoutingActivity, HomeActivity::class.java)

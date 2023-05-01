@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.widget.addTextChangedListener
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.ActivityLoginBinding
 import com.yosuahaloho.storiku.domain.model.LoginRequest
@@ -33,6 +34,10 @@ class LoginActivity : AppCompatActivity() {
         loginBinding.btnLogin.setOnClickListener {
             login()
         }
+
+        loginBinding.edLoginEmail.addTextChangedListener {
+            loginBinding.btnLogin.isEnabled = !loginBinding.layoutLoginEmail.isErrorEnabled
+        }
     }
 
     private fun login() {
@@ -45,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
                 when (it) {
                     is Result.Success -> {
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+                        finish()
                     }
                     is Result.Loading -> {
 

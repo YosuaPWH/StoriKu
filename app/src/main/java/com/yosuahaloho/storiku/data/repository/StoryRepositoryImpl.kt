@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.data.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -10,12 +11,15 @@ import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.paging.StoryRemoteMediator
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.remote.response.AddStoryResponse
+import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import com.yosuahaloho.storiku.utils.Constants.ITEM_PER_PAGE
+import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
 import com.yosuahaloho.storiku.utils.Result
 import com.yosuahaloho.storiku.utils.getError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
@@ -42,8 +46,12 @@ class StoryRepositoryImpl(
         ).flow
     }
 
-    override fun deleteAllStories() {
-
+    override fun getTenLatestStory(): Flow<List<DetailStory>> = flow {
+        try {
+            emit(db.storyDataDao().getTenLatestStory().map { it.storyDataToModel() })
+        } catch (e: Exception) {
+            Log.e("ERROR GETTENLATESTSTORY", "StoryRepository Error: $e")
+        }
     }
 
     override fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody) = flow {

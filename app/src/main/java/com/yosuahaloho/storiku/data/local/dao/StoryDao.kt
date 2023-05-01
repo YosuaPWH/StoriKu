@@ -21,4 +21,7 @@ interface StoryDao {
 
     @Query("DELETE FROM story_table")
     suspend fun deleteAllStory()
+
+    @Query("SELECT * FROM story_table LIMIT 10")
+    fun getTenLatestStory(): List<StoryData>
 }

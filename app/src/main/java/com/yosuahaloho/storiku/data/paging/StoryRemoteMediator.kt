@@ -40,8 +40,6 @@ class StoryRemoteMediator(
                 }
 
                 LoadType.REFRESH -> {
-//                    storyDataDao.deleteAllStory()
-//                    storyKeysDao.deleteAllStoryKeys()
                     val remoteKeys = getStoryKeysCloseToCurrentPositionStory(state)
                     remoteKeys?.nextPage?.minus(1) ?: 1
                 }
@@ -55,7 +53,6 @@ class StoryRemoteMediator(
                 }
             }
 
-            Log.d("CURRENTPAGE", currentPage.toString())
             val response = api.getAllStories(currentPage).listStory.map { it.detailStoryToEntity() }
             val endOfStoryReached = response.isEmpty()
 
@@ -64,7 +61,6 @@ class StoryRemoteMediator(
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    Log.d("JALAN GAK SIH ", "OYA")
                     storyDataDao.deleteAllStory()
                     storyKeysDao.deleteAllStoryKeys()
                 }

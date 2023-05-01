@@ -33,6 +33,9 @@ import com.yosuahaloho.storiku.presentation.started.StartedActivity
 import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
 import com.yosuahaloho.storiku.utils.uriToFile
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -52,11 +55,14 @@ class ListStoryFragment : Fragment() {
         _binding = FragmentListStoryBinding.inflate(inflater, container, false)
         binding.rvListStory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvListStory.adapter = listStoryAdapter
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupView()
         setupButton()
         setupMenu()
-
-        return binding.root
     }
 
     private fun setupMenu() {
@@ -100,6 +106,7 @@ class ListStoryFragment : Fragment() {
                 listStoryAdapter.submitData(data)
             }
         }
+
 
         listStoryAdapter.setOnStoryClickCallback(object : ListStoryAdapter.OnStoryClickCallback {
             override fun onStoryClicked(story: DetailStory) {
@@ -158,8 +165,6 @@ class ListStoryFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-//            val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-//            actionBar.hide()
             startCameraX()
         } else {
             Toast.makeText(requireContext(), "Tidak diijinkan", Toast.LENGTH_SHORT).show()

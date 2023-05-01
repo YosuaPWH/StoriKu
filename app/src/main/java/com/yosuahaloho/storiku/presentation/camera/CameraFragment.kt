@@ -108,7 +108,6 @@ class CameraFragment : Fragment() {
                             cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA,
                             true
                         )
-                    Toast.makeText(requireActivity(), "SELECTED ${photoFile.absolutePath}", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(toAddStory)
                 }
 
