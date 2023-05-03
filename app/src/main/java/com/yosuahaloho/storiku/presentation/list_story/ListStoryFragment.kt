@@ -4,22 +4,24 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,9 +35,6 @@ import com.yosuahaloho.storiku.presentation.started.StartedActivity
 import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
 import com.yosuahaloho.storiku.utils.uriToFile
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -63,6 +62,13 @@ class ListStoryFragment : Fragment() {
         setupView()
         setupButton()
         setupMenu()
+
+        postponeEnterTransition()
+        (requireView().parent as ViewGroup).viewTreeObserver
+            .addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
     }
 
     private fun setupMenu() {
@@ -78,6 +84,7 @@ class ListStoryFragment : Fragment() {
                         logout()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -88,11 +95,20 @@ class ListStoryFragment : Fragment() {
         lifecycleScope.launch {
             val logout = authViewModel.logout()
             if (logout) {
-                Toast.makeText(requireActivity(), "Berhasil Logout", Toast.LENGTH_SHORT).show()
+                listStoryViewModel.deleteAllDataFromDatabase()
+                Toast.makeText(
+                    requireActivity(),
+                    resources.getString(R.string.success_logout),
+                    Toast.LENGTH_SHORT
+                ).show()
                 startActivity(Intent(requireActivity(), StartedActivity::class.java))
                 activity?.finish()
             } else {
-                Toast.makeText(requireActivity(), "Gagal Logout, terdapat kesalahan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireActivity(),
+                    resources.getString(R.string.error_logout),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -107,12 +123,19 @@ class ListStoryFragment : Fragment() {
             }
         }
 
-
         listStoryAdapter.setOnStoryClickCallback(object : ListStoryAdapter.OnStoryClickCallback {
-            override fun onStoryClicked(story: DetailStory) {
+            override fun onStoryClicked(
+                story: DetailStory,
+                ivStory: ImageView
+            ) {
+                val extras = FragmentNavigatorExtras(
+                    ivStory to ivStory.transitionName
+                )
+
                 val toDetailStory =
                     ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryFragment(story)
-                findNavController().navigate(toDetailStory)
+
+                findNavController().navigate(toDetailStory, extras)
             }
         })
     }
@@ -120,7 +143,6 @@ class ListStoryFragment : Fragment() {
     @SuppressLint("InflateParams")
     private fun setupButton() {
         binding.fabAddStory.setOnClickListener {
-            Log.d("YAHADISATA", "YAHAHAH")
             val bottomSheet = BottomSheetDialog(requireContext())
             val bottomSheetView = layoutInflater.inflate(R.layout.layout_bottom_camera, null)
 
@@ -128,7 +150,6 @@ class ListStoryFragment : Fragment() {
             bottomSheet.show()
 
             bottomSheetView.findViewById<MaterialButton>(R.id.btn_camera).setOnClickListener {
-                Log.d("DIKLIK BERAPA", "INI BERAPA")
                 bottomSheet.dismiss()
                 requestPermissionCamera()
             }
@@ -147,7 +168,6 @@ class ListStoryFragment : Fragment() {
     private val pickPhotoFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                Toast.makeText(requireActivity(), "SELECTED $uri", Toast.LENGTH_SHORT).show()
                 val file = uriToFile(uri, requireActivity())
                 val toAddStory =
                     ListStoryFragmentDirections.actionListStoryFragmentToAddStoryFragment(
@@ -156,8 +176,6 @@ class ListStoryFragment : Fragment() {
                         false
                     )
                 findNavController().navigate(toAddStory)
-            } else {
-                Toast.makeText(requireActivity(), "NOTHING LAST FOREVER", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -167,7 +185,11 @@ class ListStoryFragment : Fragment() {
         if (isGranted) {
             startCameraX()
         } else {
-            Toast.makeText(requireContext(), "Tidak diijinkan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                resources.getString(R.string.not_granted_camera_permission),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -180,6 +202,12 @@ class ListStoryFragment : Fragment() {
         findNavController().navigate(toCamera)
     }
 
+    override fun onResume() {
+        super.onResume()
+        val activityFragment = (requireActivity() as AppCompatActivity)
+        activityFragment.supportActionBar?.title = resources.getString(R.string.app_name)
+        activityFragment.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

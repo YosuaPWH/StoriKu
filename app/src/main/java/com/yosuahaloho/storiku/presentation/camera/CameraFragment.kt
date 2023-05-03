@@ -1,9 +1,5 @@
 package com.yosuahaloho.storiku.presentation.camera
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +8,6 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -22,8 +17,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.FragmentCameraBinding
-import com.yosuahaloho.storiku.presentation.add_story.AddStoryFragment
 import com.yosuahaloho.storiku.utils.createFile
 
 /**
@@ -84,8 +79,12 @@ class CameraFragment : Fragment() {
                     imageCapture
                 )
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Gagal memunculkan kamera", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.error_failed_show_camera),
+                    Toast.LENGTH_SHORT
+                ).show()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -114,7 +113,7 @@ class CameraFragment : Fragment() {
                 override fun onError(exception: ImageCaptureException) {
                     Toast.makeText(
                         requireContext(),
-                        "Gagal mengambil gambar",
+                        resources.getString(R.string.error_failed_capture_image),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

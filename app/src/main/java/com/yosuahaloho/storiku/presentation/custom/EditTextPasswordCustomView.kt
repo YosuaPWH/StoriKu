@@ -1,17 +1,11 @@
 package com.yosuahaloho.storiku.presentation.custom
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Canvas
-import android.graphics.Typeface
 import android.text.InputType
 import android.util.AttributeSet
-import android.util.TypedValue
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.textfield.TextInputLayout.EndIconMode
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.utils.dpToPx
 
@@ -39,7 +33,7 @@ class EditTextPasswordCustomView : TextInputEditText {
         doOnTextChanged { text, _, _, _ ->
             val parentLayout = parent.parent as TextInputLayout
             if (text.toString().length < 8) {
-                parentLayout.error = "Input must be at least 8 characters"
+                parentLayout.error = resources.getString(R.string.error_valid_password)
                 parentLayout.errorIconDrawable = null
             } else {
                 parentLayout.isErrorEnabled = false

@@ -3,8 +3,6 @@ package com.yosuahaloho.storiku.domain.repository
 import androidx.paging.PagingData
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.remote.response.AddStoryResponse
-import com.yosuahaloho.storiku.data.remote.response.allstories.AllStoriesResponse
-import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.utils.Result
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -19,5 +17,6 @@ interface StoryRepository {
 
     fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody) : Flow<Result<AddStoryResponse?>>
 
-    fun getTenLatestStory() : Flow<List<DetailStory>>
+    suspend fun deleteAllDataFromDatabase()
+
 }

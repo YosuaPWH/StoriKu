@@ -11,6 +11,7 @@
         android:id="@+id/preview_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/image_of_new_story"
         android:src="@drawable/image_sample"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +32,7 @@
             android:id="@+id/input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description" />
+            android:hint="@string/description" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -40,6 +41,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginHorizontal="5dp"
+        android:contentDescription="@string/add_new_story"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
@@ -52,5 +54,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/input_layout"
         app:layout_constraintTop_toTopOf="@+id/input_layout" />
+
+    <View
+        android:id="@+id/background_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_50" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="progress_loading, background_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

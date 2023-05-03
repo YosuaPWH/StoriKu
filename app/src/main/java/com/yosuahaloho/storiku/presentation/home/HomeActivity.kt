@@ -1,8 +1,6 @@
 package com.yosuahaloho.storiku.presentation.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -44,21 +42,5 @@ class HomeActivity : AppCompatActivity() {
         }
         this.onBackPressedDispatcher.addCallback(this, callback)
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.btn_logout -> {
-//
-//            }
-//        }
-//        return true
-//    }
-//
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.logout, menu)
-//        return true
-//    }
-
-
 
 }

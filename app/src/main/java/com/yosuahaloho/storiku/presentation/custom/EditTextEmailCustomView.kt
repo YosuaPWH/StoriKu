@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.utils.dpToPx
 
 /**
@@ -32,7 +33,7 @@ class EditTextEmailCustomView : TextInputEditText {
             if (android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()) {
                 parentLayout.isErrorEnabled = false
             } else {
-                parentLayout.error = "Input must be valid email address"
+                parentLayout.error = resources.getString(R.string.error_valid_email)
             }
         }
 

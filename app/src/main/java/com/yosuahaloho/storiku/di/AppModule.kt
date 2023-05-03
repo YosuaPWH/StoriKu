@@ -1,13 +1,11 @@
 package com.yosuahaloho.storiku.di
 
-import android.util.Log
 import com.yosuahaloho.storiku.BuildConfig
 import com.yosuahaloho.storiku.data.local.db.StoryDatabase
 import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.repository.AuthRepositoryImpl
 import com.yosuahaloho.storiku.data.repository.StoryRepositoryImpl
-import com.yosuahaloho.storiku.data.repository.UserDataStoreRepositoryImpl
 import com.yosuahaloho.storiku.domain.repository.AuthRepository
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import com.yosuahaloho.storiku.domain.repository.UserDataStoreRepository
@@ -55,7 +53,6 @@ object AppModule {
             .addHeader("Authorization", "Bearer $token")
             .build()
 
-        Log.d("TOKEN", token)
         chain.proceed(requestHeaders)
     }
 

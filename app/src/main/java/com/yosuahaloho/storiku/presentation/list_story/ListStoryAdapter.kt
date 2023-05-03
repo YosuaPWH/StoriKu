@@ -3,13 +3,15 @@ package com.yosuahaloho.storiku.presentation.list_story
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.yosuahaloho.storiku.R
-import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.databinding.ItemStoryBinding
+import com.yosuahaloho.storiku.domain.model.DetailStory
 
 /**
  * Created by Yosua on 20/04/2023
@@ -29,11 +31,13 @@ class ListStoryAdapter :
                     .placeholder(R.drawable.image_sample)
                     .into(ivStory)
 
+                ViewCompat.setTransitionName(binding.ivStory, story.id)
+
                 val nama = root.resources.getString(R.string.photo_by, story.name)
                 tvPhotoBy.text = Html.fromHtml(nama, Html.FROM_HTML_MODE_LEGACY)
 
                 root.setOnClickListener {
-                    onStoryClickCallback.onStoryClicked(story)
+                    onStoryClickCallback.onStoryClicked(story, binding.ivStory)
                 }
             }
         }
@@ -52,7 +56,10 @@ class ListStoryAdapter :
     }
 
     interface OnStoryClickCallback {
-        fun onStoryClicked(story: DetailStory)
+        fun onStoryClicked(
+            story: DetailStory,
+            ivStory: ImageView
+        )
     }
 
     fun setOnStoryClickCallback(onStoryClickCallback: OnStoryClickCallback) {

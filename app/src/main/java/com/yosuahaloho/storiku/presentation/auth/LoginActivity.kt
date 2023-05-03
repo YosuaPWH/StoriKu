@@ -1,10 +1,11 @@
 package com.yosuahaloho.storiku.presentation.auth
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.ActivityLoginBinding
@@ -24,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
 
-        supportActionBar?.title = "Login"
+        supportActionBar?.title = resources.getString(R.string.login)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupView()
@@ -49,13 +50,22 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(request).observe(this@LoginActivity) {
                 when (it) {
                     is Result.Success -> {
+                        loginBinding.progressLayout.visibility = View.INVISIBLE
+                        Toast.makeText(
+                            this@LoginActivity,
+                            resources.getString(R.string.success_login),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                         finish()
                     }
-                    is Result.Loading -> {
 
+                    is Result.Loading -> {
+                        loginBinding.progressLayout.visibility = View.VISIBLE
                     }
+
                     is Result.Error -> {
+                        loginBinding.progressLayout.visibility = View.INVISIBLE
                         Toast.makeText(this@LoginActivity, it.error, Toast.LENGTH_SHORT).show()
                     }
                 }

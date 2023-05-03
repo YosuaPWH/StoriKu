@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">StoriKu</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hint_description">This is a description of the story. This is a description of the story. This is a description of the story. This is a description of the story. This is a description of the story.</string>
+    <string name="hint_description">This is a description of the story.</string>
     <string name="photo_by">Photo by &lt;b>%s&lt;/b></string>
     <string name="btn_to_add_story_page">Button to go to the add story page</string>
-    <string name="appwidget_text">StoriKu</string>
-    <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
-    <string name="empty_text">NO DATA</string>
+
+    <string name="success_login">Login Success</string>
+    <string name="success_register">Account registered successfully. Please log in to access your account</string>
+
+    <string name="error_valid_email">Input must be valid email address</string>
+    <string name="error_valid_password">Input must be at least 8 characters</string>
+    <string name="error_name_empty">Input name cannot be empty</string>
+
+    <string name="success_add_new_story">Successfully added a new story</string>
+    <string name="error_fill_description">Please fill in the description first</string>
+
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+
+    <string name="error_failed_show_camera">Failed to show camera</string>
+    <string name="error_failed_capture_image">Failed to capture image</string>
+
+    <string name="success_logout">Successfully logged out</string>
+    <string name="error_logout">Logout failed, an error occurred</string>
+
+    <string name="not_granted_camera_permission">Camera permission not granted</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Nama</string>
+    <string name="make_your_own_story">Make your own story</string>
+    <string name="create_account">Create account</string>
+    <string name="have_an_account">Have an account?</string>
+    <string name="image_of_new_story">Image of new story</string>
+    <string name="description">Description</string>
+    <string name="add_new_story">Add new story</string>
+    <string name="switch_camera">Switch camera</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="image_of_story">Image of story</string>
+    <string name="yosua_haloho">Yosua Haloho</string>
+    <string name="photo_by_yosua_haloho">Photo by Yosua Haloho</string>
+    <string name="to_camera">To camera</string>
+    <string name="to_gallery">To gallery</string>
 </resources>

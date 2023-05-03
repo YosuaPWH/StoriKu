@@ -1,6 +1,5 @@
 package com.yosuahaloho.storiku.data.paging
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -11,7 +10,6 @@ import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.local.entity.StoryKeys
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.utils.DataMapper.detailStoryToEntity
-import javax.inject.Inject
 
 /**
  * Created by Yosua on 21/04/2023

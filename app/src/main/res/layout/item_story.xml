@@ -10,6 +10,7 @@
         android:id="@+id/iv_story"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:contentDescription="@string/image_of_story"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,36 +22,11 @@
         android:id="@+id/tv_photo_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Photo by Yosua Haloho"
-        android:padding="10dp"
         android:background="@color/black_50"
+        android:hint="@string/photo_by_yosua_haloho"
+        android:padding="10dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/iv_story" />
-
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_author"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Yosua Haloho"-->
-<!--        android:paddingHorizontal="20dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/tv_short_desc"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_short_desc"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:ellipsize="end"-->
-<!--        android:hint="@string/hint_description"-->
-<!--        android:maxLines="2"-->
-<!--        android:paddingHorizontal="20dp"-->
-<!--        android:paddingBottom="20dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/iv_story"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

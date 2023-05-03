@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoriKu</string>
+    <string name="hint_description">Ini adalah deskripsi dari cerita.</string>
+    <string name="photo_by">Foto oleh &lt;b>%s&lt;/b></string>
+    <string name="btn_to_add_story_page">Tombol untuk pergi ke halaamn tambah cerita</string>
+
+    <string name="success_login">Login Sukses</string>
+    <string name="success_register">Akun berhasil terdaftar. Silakan login untuk mengakses akun Anda.</string>
+
+    <string name="error_valid_email">Input harus berupa alamat email yang valid</string>
+    <string name="error_valid_password">Input minimal terdiri dari 8 karakter</string>
+    <string name="error_name_empty">Input nama tidak boleh kosong</string>
+
+    <string name="success_add_new_story">Berhasil menambahkan cerita baru</string>
+    <string name="error_fill_description">Silahkan isi deskripsi terlebih dahulu</string>
+
+    <string name="register">Daftar</string>
+    <string name="login">Masuk</string>
+
+    <string name="error_failed_show_camera">Gagal memunculkan kamera</string>
+    <string name="error_failed_capture_image">Gagal mengambil gambar</string>
+
+    <string name="success_logout">Berhasil Logout</string>
+    <string name="error_logout">Gagal Logout, terdapat kesalahan</string>
+
+    <string name="not_granted_camera_permission">Izin kamera tidak diijinkan</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Nama</string>
+    <string name="make_your_own_story">Buat cerita Anda sendiri</string>
+    <string name="create_account">Buat akun</string>
+    <string name="have_an_account">Sudah punya akun?</string>
+    <string name="image_of_new_story">Gambar cerita baru</string>
+    <string name="description">Deskripsi</string>
+    <string name="add_new_story">Tambah stori baru</string>
+    <string name="switch_camera">Ganti kamera</string>
+    <string name="capture_image">Ambil gambar</string>
+    <string name="image_of_story">Gambar cerita</string>
+    <string name="yosua_haloho">Yosua Haloho</string>
+    <string name="photo_by_yosua_haloho">Foto oleh Yosua Haloho</string>
+    <string name="to_camera">Ke kamera</string>
+    <string name="to_gallery">Ke galeri</string>
+
+
+</resources>

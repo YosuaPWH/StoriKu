@@ -1,16 +1,17 @@
 package com.yosuahaloho.storiku.presentation.auth
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.ActivityRegisterBinding
 import com.yosuahaloho.storiku.domain.model.RegisterRequest
 import com.yosuahaloho.storiku.utils.Result
@@ -28,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         regisBinding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(regisBinding.root)
 
-        supportActionBar?.title = "Register"
+        supportActionBar?.title = resources.getString(R.string.register)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setupView()
@@ -41,48 +42,63 @@ class RegisterActivity : AppCompatActivity() {
 
         regisBinding.edRegisterEmail.isButtonEnabled()
         regisBinding.edRegisterPassword.isButtonEnabled()
+        regisBinding.edRegisterName.isButtonEnabled()
+
+        regisBinding.edRegisterName.doOnTextChanged { text, _, _, _ ->
+            val parentLayout = regisBinding.edRegisterName.parent.parent as TextInputLayout
+            if (text.isNullOrBlank()) {
+                parentLayout.error = resources.getString(R.string.error_name_empty)
+            } else {
+                parentLayout.isErrorEnabled = false
+            }
+        }
+        regisBinding.layoutRegisterPassword.isErrorEnabled = true
     }
 
     private fun TextInputEditText.isButtonEnabled() {
         this.addTextChangedListener {
             regisBinding.apply {
-                btnRegister.isEnabled = !layoutRegisterEmail.isErrorEnabled && !layoutRegisterPassword.isErrorEnabled
+                btnRegister.isEnabled =
+                    !layoutRegisterEmail.isErrorEnabled && !layoutRegisterPassword.isErrorEnabled && !layoutRegisterName.isErrorEnabled
             }
         }
     }
 
     private fun register() {
         regisBinding.apply {
-            if (edRegisterEmail.text.isNullOrEmpty() || edRegisterName.text.isNullOrEmpty() || edRegisterPassword.text.isNullOrEmpty()) {
-                Toast.makeText(this@RegisterActivity, "Gak boleh kosong", Toast.LENGTH_SHORT).show()
-            } else {
-                val request = RegisterRequest(
-                    name = edRegisterName.text.toString(),
-                    email = edRegisterEmail.text.toString(),
-                    password = edRegisterPassword.text.toString()
-                )
-                lifecycleScope.launch {
-                    viewModel.register(request).collect {
-                        when (it) {
-                            is Result.Success -> {
-                                startActivity(
-                                    Intent(
-                                        this@RegisterActivity,
-                                        LoginActivity::class.java
-                                    )
+
+            val request = RegisterRequest(
+                name = edRegisterName.text.toString(),
+                email = edRegisterEmail.text.toString(),
+                password = edRegisterPassword.text.toString()
+            )
+            lifecycleScope.launch {
+                viewModel.register(request).collect {
+                    when (it) {
+                        is Result.Success -> {
+                            regisBinding.progressLayout.visibility = View.INVISIBLE
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                resources.getString(R.string.success_register),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            startActivity(
+                                Intent(
+                                    this@RegisterActivity,
+                                    LoginActivity::class.java
                                 )
-                                finish()
-                            }
+                            )
+                            finish()
+                        }
 
-                            is Result.Loading -> {
+                        is Result.Loading -> {
+                            regisBinding.progressLayout.visibility = View.VISIBLE
+                        }
 
-                            }
-
-                            is Result.Error -> {
-                                Toast.makeText(this@RegisterActivity, it.error, Toast.LENGTH_SHORT)
-                                    .show()
-                                Log.d("REGISTER", "REGISTER GAGAl ${it.error}")
-                            }
+                        is Result.Error -> {
+                            regisBinding.progressLayout.visibility = View.INVISIBLE
+                            Toast.makeText(this@RegisterActivity, it.error, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }

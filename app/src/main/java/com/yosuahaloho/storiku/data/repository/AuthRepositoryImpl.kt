@@ -1,6 +1,5 @@
 package com.yosuahaloho.storiku.data.repository
 
-import com.google.gson.Gson
 import com.yosuahaloho.storiku.data.remote.ApiAuth
 import com.yosuahaloho.storiku.data.remote.response.RegisterResponse
 import com.yosuahaloho.storiku.data.remote.response.login.LoginResponse

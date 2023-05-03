@@ -6,7 +6,6 @@ package com.yosuahaloho.storiku.utils
 object Constants {
 
     const val BASE_URL = "https://story-api.dicoding.dev/v1/"
-    var TOKEN_API = "token"
     const val DATA_USER = "data_user"
     const val STORY_DATABASE = "story_database"
     const val STORY_TABLE = "story_table"
