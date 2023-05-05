@@ -10,7 +10,7 @@ import com.yosuahaloho.storiku.data.local.entity.StoryKeys
 /**
  * Created by Yosua on 20/04/2023
  */
-@Database(entities = [StoryData::class, StoryKeys::class], version = 1)
+@Database(entities = [StoryData::class, StoryKeys::class], version = 2)
 abstract class StoryDatabase: RoomDatabase() {
 
     abstract fun storyDataDao(): StoryDao

@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.data.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -62,4 +63,13 @@ class StoryRepositoryImpl(
         db.storyDataDao().deleteAllStory()
         db.storyKeysDao().deleteAllStoryKeys()
     }
+
+    override fun getAllDataFromDatabase(): Flow<List<StoryData>> = flow {
+        try {
+            val data = db.storyDataDao().getAllDataFromDatabaseWhereLocationNotNull()
+            emit(data)
+        } catch (e: Exception) {
+            Log.e("StoryRepositoryImpl", "Get All Data From Database Error: $e")
+        }
+    }.flowOn(Dispatchers.IO)
 }

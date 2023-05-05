@@ -84,11 +84,20 @@ class ListStoryFragment : Fragment() {
                         logout()
                         true
                     }
+                    R.id.btn_maps -> {
+                        goToMap()
+                        true
+                    }
 
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun goToMap() {
+        val goToMap = ListStoryFragmentDirections.actionListStoryFragmentToMapsStoryFragment()
+        findNavController().navigate(goToMap)
     }
 
     private fun logout() {
@@ -205,6 +214,7 @@ class ListStoryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val activityFragment = (requireActivity() as AppCompatActivity)
+        activityFragment.supportActionBar?.show()
         activityFragment.supportActionBar?.title = resources.getString(R.string.app_name)
         activityFragment.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }

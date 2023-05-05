@@ -13,7 +13,9 @@ object DataMapper {
         name = this.name,
         description = this.description,
         photoUrl = this.photoUrl,
-        createdAt = this.createdAt
+        createdAt = this.createdAt,
+        lat = this.lat,
+        lon = this.lon
     )
 
     fun StoryData.storyDataToModel() = DetailStory(
@@ -21,6 +23,8 @@ object DataMapper {
         name = this.name,
         description = this.description,
         photoUrl = this.photoUrl,
-        createdAt = this.createdAt
+        createdAt = this.createdAt,
+        lat = this.lat,
+        lon = this.lon
     )
 }

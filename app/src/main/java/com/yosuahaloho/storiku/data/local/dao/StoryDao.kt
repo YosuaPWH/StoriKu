@@ -24,4 +24,7 @@ interface StoryDao {
 
     @Query("SELECT * FROM story_table LIMIT 10")
     fun getTenLatestStory(): List<StoryData>
+
+    @Query("SELECT * FROM story_table WHERE lat IS NOT NULL")
+    fun getAllDataFromDatabaseWhereLocationNotNull() : List<StoryData>
 }

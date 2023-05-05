@@ -19,4 +19,6 @@ interface StoryRepository {
 
     suspend fun deleteAllDataFromDatabase()
 
+    fun getAllDataFromDatabase() : Flow<List<StoryData>>
+
 }
