@@ -12,6 +12,7 @@
         android:id="@+id/btn_logout"
         android:title="Log out"
         android:icon="@drawable/baseline_logout_24"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="collapseActionView"
+        android:contentDescription="@string/logout"/>
 
 </menu>

@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.yosuahaloho.storiku.databinding.ActivityStartedBinding
 import com.yosuahaloho.storiku.presentation.auth.LoginActivity
 import com.yosuahaloho.storiku.presentation.auth.RegisterActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StartedActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStartedBinding

@@ -41,6 +41,11 @@
     <string name="photo_by_yosua_haloho">Foto oleh Yosua Haloho</string>
     <string name="to_camera">Ke kamera</string>
     <string name="to_gallery">Ke galeri</string>
+    <string name="upload_location">Apakah anda ingin juga mengupload lokasi saat ini?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="cancel">Batal</string>
+    <string name="logout">logout</string>
 
 
 </resources>

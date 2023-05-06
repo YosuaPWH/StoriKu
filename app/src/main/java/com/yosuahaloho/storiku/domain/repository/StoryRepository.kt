@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.domain.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.remote.response.AddStoryResponse
@@ -13,9 +14,9 @@ import okhttp3.RequestBody
  */
 interface StoryRepository {
 
-    fun getAllStories() : Flow<PagingData<StoryData>>
+    fun getAllStories() : LiveData<PagingData<StoryData>>
 
-    fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody) : Flow<Result<AddStoryResponse?>>
+    fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody, lat: RequestBody?, lon: RequestBody?) : Flow<Result<AddStoryResponse?>>
 
     suspend fun deleteAllDataFromDatabase()
 

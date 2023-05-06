@@ -25,6 +25,8 @@ interface ApiStory {
     @POST("stories")
     suspend fun uploadStory(
         @Part file: MultipartBody.Part,
-        @Part("description") description: RequestBody
+        @Part("description") description: RequestBody,
+        @Part("lat") lat: RequestBody? = null,
+        @Part("lon") lon: RequestBody? = null
     ) : Response<AddStoryResponse>
 }

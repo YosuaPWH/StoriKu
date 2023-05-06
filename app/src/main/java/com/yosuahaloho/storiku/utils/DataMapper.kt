@@ -8,7 +8,7 @@ import com.yosuahaloho.storiku.domain.model.DetailStory
  */
 object DataMapper {
 
-    fun DetailStory.detailStoryToEntity() = StoryData(
+    fun com.yosuahaloho.storiku.domain.model.DetailStory.detailStoryToEntity() = StoryData(
         id = this.id,
         name = this.name,
         description = this.description,

@@ -10,20 +10,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.yosuahaloho.storiku.R
+import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.databinding.ItemStoryBinding
-import com.yosuahaloho.storiku.domain.model.DetailStory
 
 /**
  * Created by Yosua on 20/04/2023
  */
 class ListStoryAdapter :
-    PagingDataAdapter<DetailStory, ListStoryAdapter.ListStoryViewHolder>(COMPARATOR) {
+    PagingDataAdapter<StoryData, ListStoryAdapter.ListStoryViewHolder>(COMPARATOR) {
 
     private lateinit var onStoryClickCallback: OnStoryClickCallback
 
     inner class ListStoryViewHolder(private val binding: ItemStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(story: DetailStory) {
+        fun bind(story: StoryData) {
             binding.apply {
                 Glide
                     .with(root)
@@ -57,7 +57,7 @@ class ListStoryAdapter :
 
     interface OnStoryClickCallback {
         fun onStoryClicked(
-            story: DetailStory,
+            story: StoryData,
             ivStory: ImageView
         )
     }
@@ -67,12 +67,12 @@ class ListStoryAdapter :
     }
 
     companion object {
-        private val COMPARATOR = object : DiffUtil.ItemCallback<DetailStory>() {
-            override fun areItemsTheSame(oldItem: DetailStory, newItem: DetailStory): Boolean {
+        val COMPARATOR = object : DiffUtil.ItemCallback<StoryData>() {
+            override fun areItemsTheSame(oldItem: StoryData, newItem: StoryData): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: DetailStory, newItem: DetailStory): Boolean {
+            override fun areContentsTheSame(oldItem: StoryData, newItem: StoryData): Boolean {
                 return oldItem == newItem
             }
         }

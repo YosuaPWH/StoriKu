@@ -23,13 +23,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.yosuahaloho.storiku.R
+import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.databinding.FragmentListStoryBinding
-import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.presentation.auth.AuthViewModel
 import com.yosuahaloho.storiku.presentation.started.StartedActivity
 import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
@@ -84,6 +83,7 @@ class ListStoryFragment : Fragment() {
                         logout()
                         true
                     }
+
                     R.id.btn_maps -> {
                         goToMap()
                         true
@@ -123,26 +123,24 @@ class ListStoryFragment : Fragment() {
     }
 
     private fun setupView() {
-        lifecycleScope.launch {
-            listStoryViewModel.getAllStories().collect {
-                val data = it.map { sd ->
-                    sd.storyDataToModel()
-                }
-                listStoryAdapter.submitData(data)
+        listStoryViewModel.getAllStories().observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                listStoryAdapter.submitData(it)
             }
         }
 
         listStoryAdapter.setOnStoryClickCallback(object : ListStoryAdapter.OnStoryClickCallback {
             override fun onStoryClicked(
-                story: DetailStory,
+                story: StoryData,
                 ivStory: ImageView
             ) {
                 val extras = FragmentNavigatorExtras(
                     ivStory to ivStory.transitionName
                 )
+                val data = story.storyDataToModel()
 
                 val toDetailStory =
-                    ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryFragment(story)
+                    ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryFragment(data)
 
                 findNavController().navigate(toDetailStory, extras)
             }

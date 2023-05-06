@@ -1,18 +1,35 @@
 package com.yosuahaloho.storiku.presentation.add_story
 
+import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Looper
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yosuahaloho.storiku.R
 import com.yosuahaloho.storiku.databinding.FragmentAddStoryBinding
 import com.yosuahaloho.storiku.utils.Result
@@ -34,6 +51,8 @@ class AddStoryFragment : Fragment() {
     private val binding get() = _binding!!
     private var getFile: File? = null
     private val viewModel: AddStoryViewModel by viewModels()
+    private lateinit var selfLocation: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
 
 
     override fun onCreateView(
@@ -47,6 +66,20 @@ class AddStoryFragment : Fragment() {
         activityFragment.supportActionBar?.title = "Add Story"
         activityFragment.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        selfLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationRes: LocationResult) {
+                viewModel.currentLocationLatitude.postValue(locationRes.lastLocation?.latitude)
+                viewModel.currentLocationLongitude.postValue(locationRes.lastLocation?.longitude)
+
+                Log.d(
+                    "LOCATIONCALLBACK",
+                    "${locationRes.lastLocation?.longitude} dan ${locationRes.lastLocation?.latitude}"
+                )
+                uploadStory()
+            }
+        }
+
 
         val args = AddStoryFragmentArgs.fromBundle(requireArguments())
 
@@ -58,9 +91,89 @@ class AddStoryFragment : Fragment() {
 
     private fun setupButton() {
         binding.btnSend.setOnClickListener {
-            uploadStory()
+            showDialogLocation()
         }
+    }
 
+    private fun showDialogLocation() {
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        )
+            .setMessage(R.string.upload_location)
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                getMyLocation()
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ ->
+                viewModel.makeLocationEmpty()
+                uploadStory()
+            }
+            .show()
+    }
+
+    private val requestPermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                getMyLocation()
+            }
+
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                getMyLocation()
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun getMyLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        ) {
+            if (isLocationOn()) {
+                selfLocation.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+                    val location: Location? = task.result
+                    location?.let {
+                        viewModel.currentLocationLatitude.postValue(it.latitude)
+                        viewModel.currentLocationLongitude.postValue(it.longitude)
+                        Log.d("LOKASIKU", "${it.latitude} dan ${it.longitude}")
+                        uploadStory()
+                    }.run {
+//                        Toast.makeText(requireContext(), "GaL BISA YA", Toast.LENGTH_SHORT).show()
+                        val locationRequest =
+                            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000).build()
+
+                        selfLocation =
+                            LocationServices.getFusedLocationProviderClient(requireActivity())
+                        selfLocation.requestLocationUpdates(
+                            locationRequest, locationCallback, Looper.myLooper()
+                        )
+
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
+                    .show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermission.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun getPicture(args: AddStoryFragmentArgs) {
@@ -89,8 +202,21 @@ class AddStoryFragment : Fragment() {
             val imageMultiPart =
                 MultipartBody.Part.createFormData("photo", file.name, requestImageFile)
 
+            val latViewModel = viewModel.currentLocationLatitude.value.toString()
+            val lonViewModel = viewModel.currentLocationLongitude.value.toString()
+
+            Log.d("LONLONLON", "$latViewModel dan $lonViewModel")
+
+            val isLatNull = if (latViewModel == "0.0") null else latViewModel
+            val isLonNull = if (lonViewModel == "0.0") null else lonViewModel
+
+            val lat = isLatNull?.toRequestBody("text/plain".toMediaType())
+            val lon = isLonNull?.toRequestBody("text/plain".toMediaType())
+
+            Log.d("LATLATLAT", "$lat dan $lon")
+
             lifecycleScope.launch {
-                viewModel.uploadStory(imageMultiPart, description).collect {
+                viewModel.uploadStory(imageMultiPart, description, lat, lon).collect {
                     when (it) {
                         is Result.Success -> {
                             binding.progressLayout.visibility = View.INVISIBLE
@@ -100,6 +226,7 @@ class AddStoryFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
+
                             val toListFragment =
                                 AddStoryFragmentDirections.actionAddStoryFragmentToListStoryFragment()
                             toListFragment.isFromAddStory = true
@@ -125,6 +252,12 @@ class AddStoryFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun isLocationOn(): Boolean {
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     override fun onAttach(context: Context) {

@@ -1,10 +1,12 @@
 package com.yosuahaloho.storiku.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.yosuahaloho.storiku.data.local.db.StoryDatabase
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.paging.StoryRemoteMediator
@@ -30,7 +32,7 @@ class StoryRepositoryImpl(
 ) : StoryRepository {
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getAllStories(): Flow<PagingData<StoryData>> {
+    override fun getAllStories(): LiveData<PagingData<StoryData>> {
         val pagingSource = { db.storyDataDao().getAllStory() }
         return Pager(
             config = PagingConfig(pageSize = ITEM_PER_PAGE),
@@ -39,13 +41,18 @@ class StoryRepositoryImpl(
                 db = db
             ),
             pagingSourceFactory = pagingSource
-        ).flow
+        ).liveData
     }
 
-    override fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody) = flow {
+    override fun uploadStory(
+        fileImage: MultipartBody.Part,
+        description: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ) = flow {
         emit(Result.Loading)
         try {
-            api.uploadStory(file = fileImage, description = description).let {
+            api.uploadStory(file = fileImage, description = description, lat, lon).let {
                 if (it.isSuccessful) {
                     val body = it.body()
                     emit(Result.Success(body))

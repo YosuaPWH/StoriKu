@@ -1,5 +1,6 @@
 package com.yosuahaloho.storiku.presentation.add_story
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,5 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class AddStoryViewModel @Inject constructor(private val repo: StoryRepository) : ViewModel() {
 
-    fun uploadStory(fileImage: MultipartBody.Part, description: RequestBody) = repo.uploadStory(fileImage, description)
+    val currentLocationLatitude = MutableLiveData(0.0)
+    val currentLocationLongitude = MutableLiveData(0.0)
+
+    fun uploadStory(
+        fileImage: MultipartBody.Part,
+        description: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ) = repo.uploadStory(fileImage, description, lat, lon)
+
+    fun makeLocationEmpty() {
+        currentLocationLatitude.value = 0.0
+        currentLocationLongitude.value = 0.0
+    }
 }
