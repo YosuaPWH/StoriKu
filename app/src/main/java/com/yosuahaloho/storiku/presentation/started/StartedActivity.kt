@@ -19,11 +19,11 @@ class StartedActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
-        binding.btnGetstartedCreateAccount.setOnClickListener {
+        binding.btnToRegisterPage.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        binding.tvLogin.setOnClickListener {
+        binding.btnToLoginPage.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }

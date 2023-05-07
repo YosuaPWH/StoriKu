@@ -71,11 +71,6 @@ class AddStoryFragment : Fragment() {
             override fun onLocationResult(locationRes: LocationResult) {
                 viewModel.currentLocationLatitude.postValue(locationRes.lastLocation?.latitude)
                 viewModel.currentLocationLongitude.postValue(locationRes.lastLocation?.longitude)
-
-                Log.d(
-                    "LOCATIONCALLBACK",
-                    "${locationRes.lastLocation?.longitude} dan ${locationRes.lastLocation?.latitude}"
-                )
                 uploadStory()
             }
         }
@@ -135,13 +130,11 @@ class AddStoryFragment : Fragment() {
             if (isLocationOn()) {
                 selfLocation.lastLocation.addOnCompleteListener(requireActivity()) { task ->
                     val location: Location? = task.result
-                    location?.let {
-                        viewModel.currentLocationLatitude.postValue(it.latitude)
-                        viewModel.currentLocationLongitude.postValue(it.longitude)
-                        Log.d("LOKASIKU", "${it.latitude} dan ${it.longitude}")
+                    if (location != null) {
+                        viewModel.currentLocationLatitude.postValue(location.latitude)
+                        viewModel.currentLocationLongitude.postValue(location.longitude)
                         uploadStory()
-                    }.run {
-//                        Toast.makeText(requireContext(), "GaL BISA YA", Toast.LENGTH_SHORT).show()
+                    } else {
                         val locationRequest =
                             LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000).build()
 
@@ -150,7 +143,6 @@ class AddStoryFragment : Fragment() {
                         selfLocation.requestLocationUpdates(
                             locationRequest, locationCallback, Looper.myLooper()
                         )
-
                     }
                 }
             } else {
@@ -205,15 +197,11 @@ class AddStoryFragment : Fragment() {
             val latViewModel = viewModel.currentLocationLatitude.value.toString()
             val lonViewModel = viewModel.currentLocationLongitude.value.toString()
 
-            Log.d("LONLONLON", "$latViewModel dan $lonViewModel")
-
             val isLatNull = if (latViewModel == "0.0") null else latViewModel
             val isLonNull = if (lonViewModel == "0.0") null else lonViewModel
 
             val lat = isLatNull?.toRequestBody("text/plain".toMediaType())
             val lon = isLonNull?.toRequestBody("text/plain".toMediaType())
-
-            Log.d("LATLATLAT", "$lat dan $lon")
 
             lifecycleScope.launch {
                 viewModel.uploadStory(imageMultiPart, description, lat, lon).collect {
