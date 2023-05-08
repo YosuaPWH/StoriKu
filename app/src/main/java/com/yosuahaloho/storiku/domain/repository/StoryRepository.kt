@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.remote.response.AddStoryResponse
+import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.utils.Result
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -20,6 +21,6 @@ interface StoryRepository {
 
     suspend fun deleteAllDataFromDatabase()
 
-    fun getAllDataFromDatabase() : Flow<List<StoryData>>
+    fun getStoriesThatHaveLocation() : Flow<List<DetailStory>>
 
 }

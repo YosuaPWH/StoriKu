@@ -12,6 +12,7 @@ import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.data.paging.StoryRemoteMediator
 import com.yosuahaloho.storiku.data.remote.ApiStory
 import com.yosuahaloho.storiku.data.remote.response.AddStoryResponse
+import com.yosuahaloho.storiku.domain.model.DetailStory
 import com.yosuahaloho.storiku.domain.repository.StoryRepository
 import com.yosuahaloho.storiku.utils.Constants.ITEM_PER_PAGE
 import com.yosuahaloho.storiku.utils.Result
@@ -71,12 +72,12 @@ class StoryRepositoryImpl(
         db.storyKeysDao().deleteAllStoryKeys()
     }
 
-    override fun getAllDataFromDatabase(): Flow<List<StoryData>> = flow {
+    override fun getStoriesThatHaveLocation(): Flow<List<DetailStory>> = flow {
         try {
-            val data = db.storyDataDao().getAllDataFromDatabaseWhereLocationNotNull()
+            val data = api.getStoriesThatHaveLocation().listStory
             emit(data)
         } catch (e: Exception) {
-            Log.e("StoryRepositoryImpl", "Get All Data From Database Error: $e")
+            Log.e("GetStoriesThatHaveLocation", e.toString())
         }
-    }.flowOn(Dispatchers.IO)
+    }
 }

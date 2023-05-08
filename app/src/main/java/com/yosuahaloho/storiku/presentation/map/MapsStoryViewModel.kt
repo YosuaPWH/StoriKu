@@ -13,5 +13,5 @@ import javax.inject.Inject
 @HiltViewModel
 class MapsStoryViewModel @Inject constructor(private val repo: StoryRepository): ViewModel() {
 
-    fun getStoryFromDatabase() = repo.getAllDataFromDatabase().asLiveData().distinctUntilChanged()
+    fun getStoriesThatHaveLocation() = repo.getStoriesThatHaveLocation().asLiveData()
 }

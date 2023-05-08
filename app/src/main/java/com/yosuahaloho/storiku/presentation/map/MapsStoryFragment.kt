@@ -24,10 +24,9 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yosuahaloho.storiku.R
-import com.yosuahaloho.storiku.data.local.entity.StoryData
 import com.yosuahaloho.storiku.databinding.CustomPinWindowBinding
 import com.yosuahaloho.storiku.databinding.FragmentMapsStoryBinding
-import com.yosuahaloho.storiku.utils.DataMapper.storyDataToModel
+import com.yosuahaloho.storiku.domain.model.DetailStory
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -64,7 +63,7 @@ class MapsStoryFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAd
         googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.uiSettings.isMapToolbarEnabled = true
 
-        mapStoryViewModel.getStoryFromDatabase().observe(viewLifecycleOwner) { data ->
+        mapStoryViewModel.getStoriesThatHaveLocation().observe(viewLifecycleOwner) { data ->
             data.forEach {
                 val lati = it.lat ?: 0.0
                 val longi = it.lon ?: 0.0
@@ -77,9 +76,8 @@ class MapsStoryFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAd
         }
         googleMap.setInfoWindowAdapter(this)
         googleMap.setOnInfoWindowClickListener {
-            val dataStory = it.tag as StoryData
-            val modelData = dataStory.storyDataToModel()
-            goToDetailStory(modelData)
+            val dataStory = it.tag as DetailStory
+            goToDetailStory(dataStory)
         }
 
         setMapStyle()
@@ -104,7 +102,7 @@ class MapsStoryFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAd
         }
     }
 
-    private fun goToDetailStory(dataStory: com.yosuahaloho.storiku.domain.model.DetailStory) {
+    private fun goToDetailStory(dataStory: DetailStory) {
         val toDetailStory =
             MapsStoryFragmentDirections.actionMapsStoryFragmentToDetailStoryFragment(dataStory)
         findNavController().navigate(toDetailStory)
@@ -116,7 +114,7 @@ class MapsStoryFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAd
 
     override fun getInfoWindow(marker: Marker): View {
         val binding = CustomPinWindowBinding.inflate(layoutInflater)
-        val dataStory = marker.tag as StoryData
+        val dataStory = marker.tag as DetailStory
 
         binding.pinLocation.text =
             getAddressName(marker.position.latitude, marker.position.longitude)

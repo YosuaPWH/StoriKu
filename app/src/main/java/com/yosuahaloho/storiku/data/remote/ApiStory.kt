@@ -29,4 +29,11 @@ interface ApiStory {
         @Part("lat") lat: RequestBody? = null,
         @Part("lon") lon: RequestBody? = null
     ) : Response<AddStoryResponse>
+
+    @GET("stories?location=1")
+    suspend fun getStoriesThatHaveLocation(
+        @Query("size") size: Int = 20,
+        @Query("page") page: Int = 1
+    ) : AllStoriesResponse
+
 }
